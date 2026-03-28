@@ -10,12 +10,13 @@ from routes.notifications import router as notifications_router
 from routes.state import router as state_router
 from routes.advanced_features import router as advanced_router
 from services.notification_engine import notification_engine
-
+from services.os_notification_listener import os_listener
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    asyncio.create_task(notification_engine.simulate_incoming_notifications())
+    # asyncio.create_task(notification_engine.simulate_incoming_notifications())
+    asyncio.create_task(os_listener.start_polling(interval_seconds=5))
     yield
     # Shutdown
     # Add any cleanup code here if needed

@@ -1,6 +1,6 @@
-import Dashboard from "./pages/Dashboard";
+import ModernDashboard from "./pages/ModernDashboard";
 import "./styles.css";
 
 export default function App() {
-  return <Dashboard />;
+  return <ModernDashboard />;
 }

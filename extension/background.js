@@ -14,7 +14,20 @@ let lastContextCapsule = null;
 
 async function sendActivityTick() {
   try {
+    const { trackingPaused } = await chrome.storage.local.get("trackingPaused");
+    if (trackingPaused) {
+      console.log("[Activity Tracker] Tracking is paused. Skipping sync.");
+      return;
+    }
+
     const payload = await getActivityPayload();
+    
+    // Add deep work info to payload if active
+    const { deepWorkMode } = await chrome.storage.local.get("deepWorkMode");
+    if (deepWorkMode) {
+      payload.is_deep_work = true;
+    }
+
     const result = await postActivity(payload);
     
     activityCount++;

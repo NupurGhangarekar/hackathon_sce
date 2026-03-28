@@ -63,10 +63,10 @@ export default function DebtTimelinePanel() {
   };
 
   return (
-    <div className="panel debt-timeline-panel">
+    <div className="glass-panel debt-timeline-panel full-width">
       <div className="panel-header">
-        <h2>⏰ Attention Debt Tracker</h2>
-        <p className="subtitle">Time lost due to interruptions</p>
+        <h3 className="panel-title">Attention Debt Tracker</h3>
+        <p className="panel-subtitle">Time lost due to interruptions</p>
       </div>
 
       {loading ? (
@@ -111,31 +111,16 @@ export default function DebtTimelinePanel() {
             <div style={{ marginTop: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                 <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1f2937' }}>📈 Debt Accumulation Over Time</h3>
-                <div>
+                <div className="tab-control-group" style={{ marginBottom: 0 }}>
                   <button
                     onClick={() => setChartType('area')}
-                    style={{
-                      padding: '4px 8px',
-                      marginRight: '4px',
-                      borderRadius: '4px',
-                      border: chartType === 'area' ? '2px solid #3b82f6' : '1px solid #ccc',
-                      background: chartType === 'area' ? '#e0f2fe' : '#f9fafb',
-                      cursor: 'pointer',
-                      fontSize: '11px',
-                    }}
+                    className={`tab-control-btn ${chartType === 'area' ? 'active' : ''}`}
                   >
                     Area
                   </button>
                   <button
                     onClick={() => setChartType('line')}
-                    style={{
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      border: chartType === 'line' ? '2px solid #3b82f6' : '1px solid #ccc',
-                      background: chartType === 'line' ? '#e0f2fe' : '#f9fafb',
-                      cursor: 'pointer',
-                      fontSize: '11px',
-                    }}
+                    className={`tab-control-btn ${chartType === 'line' ? 'active' : ''}`}
                   >
                     Line
                   </button>

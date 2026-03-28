@@ -35,26 +35,18 @@ export default function ActivityTimelinePanel() {
   };
 
   return (
-    <div className="panel activity-timeline-panel">
+    <div className="glass-panel activity-timeline-panel full-width">
       <div className="panel-header">
-        <h2>📊 Activity Timeline</h2>
-        <p className="subtitle">Time spent on different tabs/URLs</p>
+        <h3 className="panel-title">Activity Timeline</h3>
+        <p className="panel-subtitle">Time spent on different tabs/URLs</p>
       </div>
 
-      <div style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
+      <div className="tab-control-group">
         {[15, 30, 60, 120].map((tf) => (
           <button
             key={tf}
             onClick={() => setTimeframe(tf)}
-            style={{
-              padding: '6px 12px',
-              borderRadius: '4px',
-              border: timeframe === tf ? '2px solid #3b82f6' : '1px solid #ccc',
-              background: timeframe === tf ? '#e0f2fe' : '#f9fafb',
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: timeframe === tf ? '600' : '500',
-            }}
+            className={`tab-control-btn ${timeframe === tf ? 'active' : ''}`}
           >
             {tf}m
           </button>

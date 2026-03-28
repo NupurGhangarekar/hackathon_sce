@@ -42,10 +42,10 @@ export default function ContextCapsulePanel() {
   };
 
   return (
-    <div className="panel context-capsule-panel">
+    <div className="glass-panel context-capsule-panel">
       <div className="panel-header">
-        <h2>📸 Context Capsule</h2>
-        <p className="subtitle">Your work snapshot before interruption</p>
+        <h3 className="panel-title">Context Capsule</h3>
+        <p className="panel-subtitle">Your work snapshot before interruption</p>
       </div>
 
       {capsule ? (

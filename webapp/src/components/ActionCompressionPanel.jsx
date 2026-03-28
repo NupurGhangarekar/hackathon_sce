@@ -71,10 +71,10 @@ export default function ActionCompressionPanel() {
   const completedCount = completedActions.size;
 
   return (
-    <div className="panel action-compression-panel">
+    <div className="glass-panel action-compression-panel">
       <div className="panel-header">
-        <h2>🎯 Smart Actions</h2>
-        <p className="subtitle">Notifications compressed into actionable tasks</p>
+        <h3 className="panel-title">Smart Actions</h3>
+        <p className="panel-subtitle">Notifications compressed into actionable tasks</p>
       </div>
 
       {loading ? (

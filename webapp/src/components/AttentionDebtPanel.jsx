@@ -39,10 +39,10 @@ export default function AttentionDebtPanel() {
   const level = getDebtLevel(debtScore.total_time_lost_minutes);
 
   return (
-    <div className="panel attention-debt-panel">
+    <div className="glass-panel attention-debt-panel">
       <div className="panel-header">
-        <h2>⏳ Attention Debt Score</h2>
-        <p className="subtitle">Cost of interruptions today</p>
+        <h3 className="panel-title">Attention Debt Score</h3>
+        <p className="panel-subtitle">Cost of interruptions today</p>
       </div>
 
       <div className="debt-summary">

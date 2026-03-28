@@ -17,3 +17,19 @@ export async function getNotifications() {
   }
   return response.json();
 }
+
+export async function getActivitySummary(minutes = 60) {
+  const response = await fetch(`${BASE_URL}/api/v1/timeline/activity-summary?minutes=${minutes}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch activity summary");
+  }
+  return response.json();
+}
+
+export async function getPendingActions() {
+  const response = await fetch(`${BASE_URL}/api/v1/actions/pending`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch pending actions");
+  }
+  return response.json();
+}
