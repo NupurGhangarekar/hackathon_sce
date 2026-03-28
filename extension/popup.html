@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Context Notifier</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="popup">
+      <h1>Context Notifier</h1>
+      <section class="card">
+        <p class="label">Current focus state</p>
+        <p id="focusState" class="value">Loading...</p>
+      </section>
+      <section class="card">
+        <p class="label">Pending notifications</p>
+        <p id="pendingCount" class="value">0</p>
+      </section>
+      <p id="syncInfo" class="hint"></p>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
