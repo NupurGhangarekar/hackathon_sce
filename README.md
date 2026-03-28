@@ -45,7 +45,20 @@ cd backend
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
+python run.py
+```
+
+Backend network configuration uses environment variables:
+
+- `BACKEND_HOST` (default: `0.0.0.0`)
+- `BACKEND_PORT` (default: `8000`)
+
+You can set custom values in shell before running:
+
+```powershell
+$env:BACKEND_HOST="0.0.0.0"
+$env:BACKEND_PORT="8080"
+python run.py
 ```
 
 Backend endpoints:
@@ -61,6 +74,19 @@ npm install
 npm run dev
 ```
 
+Configure API URL with a React env file:
+
+1. Copy `webapp/.env.example` to `webapp/.env`
+2. Set `VITE_API_BASE_URL` to your backend URL
+
+Example:
+
+```text
+VITE_API_BASE_URL=http://192.168.1.25:8000
+```
+
+If `VITE_API_BASE_URL` is not set, the app falls back to `http://<current-hostname>:8000`.
+
 Open the URL shown by Vite (usually `http://localhost:5173`).
 
 ## 3) Chrome Extension
@@ -70,6 +96,34 @@ Open the URL shown by Vite (usually `http://localhost:5173`).
 3. Click **Load unpacked** and select the `extension/` folder.
 4. Keep backend running on `http://localhost:8000`.
 5. Use browser tabs normally; open extension popup to view state and pending count.
+
+For LAN testing, update `extension/api/apiClient.js` `BASE_URL` to your machine IP (for example `http://192.168.1.25:8000`).
+
+## Mobile Access (Same WiFi)
+
+1. Connect phone and computer to the same WiFi network.
+2. Find computer local IPv4 address (for example `192.168.1.25`).
+3. Start backend bound to `0.0.0.0` (default via `python run.py`).
+4. In `webapp/.env`, set:
+
+```text
+VITE_API_BASE_URL=http://<YOUR_LOCAL_IP>:8000
+```
+
+5. Run frontend with host exposed to LAN:
+
+```bash
+cd webapp
+npm run dev -- --host 0.0.0.0 --port 5173
+```
+
+6. On mobile browser, open:
+
+```text
+http://<YOUR_LOCAL_IP>:5173
+```
+
+If it does not load, allow ports `8000` and `5173` through your firewall.
 
 ## Demo Flow
 
@@ -90,6 +144,6 @@ Open the URL shown by Vite (usually `http://localhost:5173`).
 
 ## Quick Troubleshooting
 
-- CORS/API issues: ensure backend is running on port `8000`.
+- CORS/API issues: backend allows all origins; ensure backend URL in `VITE_API_BASE_URL` is reachable from the client device.
 - No state changes: verify extension is loaded and permissions are granted.
 - Dashboard not updating: check browser console and backend logs.
