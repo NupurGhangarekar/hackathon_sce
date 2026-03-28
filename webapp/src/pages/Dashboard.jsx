@@ -7,6 +7,8 @@ import StateCard from "../components/StateCard";
 import ContextCapsulePanel from "../components/ContextCapsulePanel";
 import AttentionDebtPanel from "../components/AttentionDebtPanel";
 import ActionCompressionPanel from "../components/ActionCompressionPanel";
+import ActivityTimelinePanel from "../components/ActivityTimelinePanel";
+import DebtTimelinePanel from "../components/DebtTimelinePanel";
 import { getNotifications, getState } from "../services/api";
 
 const INITIAL_STATE = {
@@ -79,6 +81,11 @@ export default function Dashboard() {
         <ContextCapsulePanel />
         <AttentionDebtPanel />
         <ActionCompressionPanel />
+      </div>
+
+      <div className="advanced-features-grid">
+        <ActivityTimelinePanel />
+        <DebtTimelinePanel />
       </div>
     </div>
   );

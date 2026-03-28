@@ -749,3 +749,47 @@ h4 {
     grid-template-columns: 1fr;
   }
 }
+
+/* Activity Timeline & Debt Visualization Styles */
+
+.activity-timeline-panel,
+.debt-timeline-panel {
+  grid-column: 1 / -1;
+}
+
+.debt-summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.debt-card {
+  background: #f9fafb;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.card-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #666;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  border-radius: 8px;
+  background: #f9fafb;
+  border: 2px dashed #e5e7eb;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 14px;
+}
