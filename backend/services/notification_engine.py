@@ -37,6 +37,23 @@ class NotificationEngine:
     def get_pending_count(self) -> int:
         return len(self.delayed_notifications)
 
+    def get_all_notifications(self) -> list[NotificationItem]:
+        """Get all notifications (both delayed and delivered)"""
+        return self.delayed_notifications + self.delivered_notifications
+
+    def get_compressed_notifications(self) -> dict:
+        """Get notifications with action compression applied"""
+        from services.action_compression_engine import action_compression_engine
+
+        all_notifs = self.get_all_notifications()
+        actions = action_compression_engine.compress_notifications(all_notifs)
+
+        return {
+            "total_notifications": len(all_notifs),
+            "compressed_actions": len(actions),
+            "actions": actions,
+        }
+
     async def simulate_incoming_notifications(self) -> None:
         while True:
             await asyncio.sleep(settings.notification_interval_seconds)
@@ -45,3 +62,4 @@ class NotificationEngine:
 
 
 notification_engine = NotificationEngine()
+

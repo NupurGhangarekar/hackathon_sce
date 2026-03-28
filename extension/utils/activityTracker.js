@@ -5,16 +5,30 @@ const trackerState = {
   idleSeconds: 0,
   lastActiveAt: Date.now(),
   currentIdleState: "active",
+  currentFile: "",
+  clipboardSnippet: "",
+  lastInterruptionAt: Date.now(),
 };
 
 async function updateActiveTabUrl() {
   const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
   trackerState.activeUrl = activeTab?.url ?? "";
+  // Try to extract file name from URL for coding sites
+  try {
+    const url = new URL(trackerState.activeUrl);
+    if (url.hostname.includes("github")) {
+      const path = url.pathname;
+      trackerState.currentFile = path.split("/").pop() || "";
+    }
+  } catch (e) {
+    // Invalid URL, skip file extraction
+  }
 }
 
 function onTabActivated() {
   trackerState.tabSwitchCount += 1;
   trackerState.tabSwitchesLast5s += 1;
+  trackerState.lastInterruptionAt = Date.now();
   updateActiveTabUrl();
 }
 
@@ -45,8 +59,20 @@ async function refreshIdleTime() {
   trackerState.idleSeconds = Math.max(0, elapsed);
 }
 
+async function captureClipboard() {
+  try {
+    // Note: Requires clipboard permission in manifest.json
+    const text = await navigator.clipboard.readText();
+    trackerState.clipboardSnippet = text.substring(0, 100); // Limit to first 100 chars
+  } catch (e) {
+    // Clipboard access denied or not available
+    trackerState.clipboardSnippet = "";
+  }
+}
+
 export async function initializeActivityTracker() {
   await updateActiveTabUrl();
+  await captureClipboard();
 
   chrome.tabs.onActivated.addListener(onTabActivated);
   chrome.tabs.onUpdated.addListener(onTabUpdated);
@@ -55,16 +81,23 @@ export async function initializeActivityTracker() {
 
 export async function getActivityPayload() {
   await refreshIdleTime();
+  await captureClipboard();
 
   return {
     active_url: trackerState.activeUrl,
     tab_switch_count: trackerState.tabSwitchCount,
     tab_switches_last_5s: trackerState.tabSwitchesLast5s,
     idle_seconds: trackerState.idleSeconds,
+    current_file: trackerState.currentFile,
+    clipboard_snippet: trackerState.clipboardSnippet,
     timestamp: new Date().toISOString(),
   };
 }
 
 export function resetIntervalCounters() {
   trackerState.tabSwitchesLast5s = 0;
+}
+
+export function getTrackerState() {
+  return { ...trackerState };
 }

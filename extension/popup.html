@@ -3,22 +3,234 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Context Notifier</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>Activity Tracker Status</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 380px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #333;
+      }
+
+      .container {
+        padding: 20px;
+        background: white;
+        min-height: 100vh;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+
+      .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      .status-indicator.active {
+        background: #10b981;
+      }
+
+      .status-indicator.error {
+        background: #ef4444;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      h1 {
+        font-size: 1.2rem;
+        color: #1f2937;
+      }
+
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 0.95rem;
+      }
+
+      .stat-row:last-child {
+        border-bottom: none;
+      }
+
+      .stat-label {
+        color: #6b7280;
+        font-weight: 500;
+      }
+
+      .stat-value {
+        color: #1f2937;
+        font-weight: 600;
+        font-family: "Courier New", monospace;
+      }
+
+      .stat-value.highlight {
+        color: #667eea;
+      }
+
+      .section {
+        margin-bottom: 20px;
+      }
+
+      .section-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+        margin-top: 16px;
+      }
+
+      .data-box {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 0.9rem;
+        word-break: break-all;
+        font-family: "Courier New", monospace;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      .data-box.error {
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #dc2626;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      button {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-primary {
+        background: #667eea;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #5568d3;
+      }
+
+      .btn-secondary {
+        background: #f3f4f6;
+        color: #1f2937;
+        border: 1px solid #e5e7eb;
+      }
+
+      .btn-secondary:hover {
+        background: #e5e7eb;
+      }
+
+      .info-box {
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        border-radius: 6px;
+        padding: 12px;
+        font-size: 0.85rem;
+        color: #047857;
+        margin-bottom: 16px;
+      }
+
+      .loading {
+        text-align: center;
+        color: #9ca3af;
+        font-style: italic;
+      }
+    </style>
   </head>
   <body>
-    <main class="popup">
-      <h1>Context Notifier</h1>
-      <section class="card">
-        <p class="label">Current focus state</p>
-        <p id="focusState" class="value">Loading...</p>
-      </section>
-      <section class="card">
-        <p class="label">Pending notifications</p>
-        <p id="pendingCount" class="value">0</p>
-      </section>
-      <p id="syncInfo" class="hint"></p>
-    </main>
-    <script type="module" src="popup.js"></script>
+    <div class="container">
+      <div class="header">
+        <div class="status-indicator active" id="statusIndicator"></div>
+        <h1>Activity Tracker</h1>
+      </div>
+
+      <div class="info-box">
+        ✨ Tracking your browser activity and sending to the dashboard in real-time
+      </div>
+
+      <div class="section">
+        <div class="section-title">📊 Status</div>
+        <div class="stat-row">
+          <span class="stat-label">Extension Status:</span>
+          <span class="stat-value" id="status">Loading...</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Syncs Sent:</span>
+          <span class="stat-value highlight" id="activityCount">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Last Sync:</span>
+          <span class="stat-value" id="lastSync">Never</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Focus State:</span>
+          <span class="stat-value" id="focusState">—</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">🎯 Current Data</div>
+        <div id="currentData" class="data-box">
+          <div class="loading">Loading...</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">💻 Backend Connection</div>
+        <div class="stat-row">
+          <span class="stat-label">API Endpoint:</span>
+          <span class="stat-value" style="font-size: 0.85rem;">localhost:8000</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Dashboard:</span>
+          <span class="stat-value" style="font-size: 0.85rem;">localhost:5173</span>
+        </div>
+      </div>
+
+      <div id="errorBox" style="display: none; margin-top: 16px;">
+        <div class="section-title">⚠️ Error</div>
+        <div id="errorMessage" class="data-box error"></div>
+      </div>
+
+      <div class="button-group">
+        <button class="btn-secondary" onclick="openDashboard()">📊 Open Dashboard</button>
+        <button class="btn-secondary" onclick="refreshStatus()">🔄 Refresh</button>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
   </body>
 </html>

@@ -4,6 +4,9 @@ import ActivityPanel from "../components/ActivityPanel";
 import Navbar from "../components/Navbar";
 import NotificationPanel from "../components/NotificationPanel";
 import StateCard from "../components/StateCard";
+import ContextCapsulePanel from "../components/ContextCapsulePanel";
+import AttentionDebtPanel from "../components/AttentionDebtPanel";
+import ActionCompressionPanel from "../components/ActionCompressionPanel";
 import { getNotifications, getState } from "../services/api";
 
 const INITIAL_STATE = {
@@ -24,6 +27,7 @@ export default function Dashboard() {
   const [state, setState] = useState(INITIAL_STATE);
   const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
   const [error, setError] = useState("");
+  const [extensionConnected, setExtensionConnected] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -38,6 +42,12 @@ export default function Dashboard() {
         if (!active) return;
         setState(stateData);
         setNotifications(notificationsData);
+        
+        // Check if we're getting real data from the extension
+        if (stateData.tab_switch_count > 0 || notificationsData.pending_count > 0) {
+          setExtensionConnected(true);
+        }
+        
         setError("");
       } catch (_err) {
         if (!active) return;
@@ -46,7 +56,7 @@ export default function Dashboard() {
     }
 
     loadData();
-    const timer = window.setInterval(loadData, 4000);
+    const timer = window.setInterval(loadData, 2000); // Refresh every 2 seconds
 
     return () => {
       active = false;
@@ -63,6 +73,12 @@ export default function Dashboard() {
       <div className="panel-grid">
         <ActivityPanel state={state} />
         <NotificationPanel notifications={notifications} />
+      </div>
+
+      <div className="advanced-features-grid">
+        <ContextCapsulePanel />
+        <AttentionDebtPanel />
+        <ActionCompressionPanel />
       </div>
     </div>
   );
