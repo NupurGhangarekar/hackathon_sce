@@ -7,6 +7,8 @@ const currentDataEl = document.getElementById("currentData");
 const statusIndicator = document.getElementById("statusIndicator");
 const errorBox = document.getElementById("errorBox");
 const errorMessage = document.getElementById("errorMessage");
+const dashboardBtn = document.getElementById("dashboardBtn");
+const refreshBtn = document.getElementById("refreshBtn");
 
 // Helper function to format time difference
 function formatTimeAgo(timestamp) {
@@ -91,6 +93,14 @@ function refreshStatus() {
 // Open dashboard
 function openDashboard() {
   chrome.tabs.create({ url: "http://localhost:5173" });
+}
+
+// Add event listeners to buttons
+if (dashboardBtn) {
+  dashboardBtn.addEventListener("click", openDashboard);
+}
+if (refreshBtn) {
+  refreshBtn.addEventListener("click", refreshStatus);
 }
 
 // Update immediately and then every 2 seconds
